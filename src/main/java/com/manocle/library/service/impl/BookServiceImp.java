@@ -6,6 +6,8 @@ import com.manocle.library.model.repository.BookRepository;
 import com.manocle.library.service.BookService;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class BookServiceImp implements BookService {
 
@@ -24,5 +26,10 @@ public class BookServiceImp implements BookService {
         }
 
         return repository.save(book);
+    }
+
+    @Override
+    public Optional<Book> getById(Long id) {
+        return Optional.empty();
     }
 }
