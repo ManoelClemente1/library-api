@@ -1,5 +1,6 @@
 package com.manocle.library.service.impl;
 
+import com.manocle.library.exception.BusinessException;
 import com.manocle.library.model.entity.Book;
 import com.manocle.library.model.repository.BookRepository;
 import com.manocle.library.service.BookService;
@@ -17,6 +18,11 @@ public class BookServiceImp implements BookService {
 
     @Override
     public Book save(Book book) {
+
+        if(repository.existsByIsbn(book.getIsbn())){
+            throw new BusinessException("Isbn já cadastrado");
+        }
+
         return repository.save(book);
     }
 }

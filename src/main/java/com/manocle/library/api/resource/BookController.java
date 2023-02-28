@@ -2,6 +2,7 @@ package com.manocle.library.api.resource;
 
 import com.manocle.library.api.dto.BookDTO;
 import com.manocle.library.api.exceptions.handler.ApiErrors;
+import com.manocle.library.exception.BusinessException;
 import com.manocle.library.model.entity.Book;
 import com.manocle.library.service.BookService;
 import org.modelmapper.ModelMapper;
@@ -36,10 +37,16 @@ public class BookController {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiErrors handleValidationExceptions(MethodArgumentNotValidException methodArgumentNotValidException){
+    public ApiErrors handlerValidationExceptions(MethodArgumentNotValidException methodArgumentNotValidException){
         BindingResult bindingResult = methodArgumentNotValidException.getBindingResult();
         return new ApiErrors(bindingResult);
 
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiErrors handleBusinessException(BusinessException businessException){
+        return new ApiErrors(businessException);
     }
 
 }
