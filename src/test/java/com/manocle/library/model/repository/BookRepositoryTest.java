@@ -53,7 +53,7 @@ public class BookRepositoryTest {
 
         boolean exists = repository.existsByIsbn(isbn);
 
-        assertThat(exists).isTrue();
+        assertThat(exists).isFalse();
 
 
     }
