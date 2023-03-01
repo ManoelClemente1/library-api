@@ -11,6 +11,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
@@ -30,11 +32,7 @@ public class BookRepositoryTest {
 
         String isbn = "123";
 
-        Book book = Book.builder()
-                .isbn(isbn)
-                .author("Fulano")
-                .title("As aventuras")
-                .build();
+        Book book = createNewBook(isbn);
 
         entityManager.persist(book);
 
@@ -43,6 +41,14 @@ public class BookRepositoryTest {
         assertThat(exists).isTrue();
 
 
+    }
+
+    private Book createNewBook(String isbn) {
+        return Book.builder()
+                    .isbn(isbn)
+                    .author("Fulano")
+                    .title("As aventuras")
+                    .build();
     }
 
     @Test
@@ -55,6 +61,47 @@ public class BookRepositoryTest {
 
         assertThat(exists).isFalse();
 
+    }
+
+    @Test
+    @DisplayName("Deve obter um livro por id")
+    public void getBYId(){
+
+        Book book = createNewBook("123");
+        entityManager.persist(book);
+
+        Optional<Book> foundBook = repository.findById(book.getId());
+
+        assertThat(foundBook.isPresent()).isTrue();
+
+    }
+
+
+    @Test
+    @DisplayName("Deve salvar um livro")
+    public void saveBookTest(){
+
+        Book book = createNewBook("123");
+
+        Book savedBook = repository.save(book);
+
+        assertThat(savedBook.getId()).isNotNull();
+
+    }
+
+    @Test
+    @DisplayName("Deve deletar um livro")
+    public void deleteBookTest(){
+        Book book = createNewBook("123");
+        entityManager.persist(book);
+
+        Book foundBook = entityManager.find(Book.class, book.getId());
+
+        repository.delete(book);
+
+        Book deletedBook = entityManager.find(Book.class, book.getId());
+
+        assertThat(deletedBook).isNull();
 
     }
 
